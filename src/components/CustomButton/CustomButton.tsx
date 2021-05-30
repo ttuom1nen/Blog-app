@@ -1,15 +1,15 @@
 import React, { ReactNode } from "react";
-import { CustomButtonContainer } from "./CustomButton.styles";
+import { Button } from "./CustomButton.styles";
 
 export interface Props {
   onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children: ReactNode;
   type?: "button" | "submit" | "reset";
-  role?: "delete";
+  role?: "primary" | "secondary";
 }
 
-const DeleteButton: React.FC<Props> = ({ children, ...props }) => {
-  return <CustomButtonContainer {...props}>{children}</CustomButtonContainer>;
+const CustomButton: React.FC<Props> = ({ children, ...props }) => {
+  return <Button {...props}>{children}</Button>;
 };
 
-export default DeleteButton;
+export default CustomButton;

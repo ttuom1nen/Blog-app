@@ -22,3 +22,7 @@ export const UserName = styled.div`
   font-size: 12px;
   padding: 20px;
 `;
+
+export const PostFooter = styled.div`
+  display: flex;
+`;

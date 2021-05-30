@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import { listPosts } from "../../graphql/queries";
 import { API, graphqlOperation } from "aws-amplify";
 import { Post } from "../../API";
-import { PostsContainer, PostItem, UserName } from "./PostList.styles";
+import {
+  PostsContainer,
+  PostItem,
+  UserName,
+  PostFooter,
+} from "./PostList.styles";
 import CustomButton from "../CustomButton/CustomButton";
 
 const PostList = () => {
@@ -12,6 +17,7 @@ const PostList = () => {
     (async () => {
       // Rationale for any:
       // As of 22.05.2021 the graphql response type does not know .data
+      // TODO: Fix it
       const response: any = await API.graphql(graphqlOperation(listPosts));
 
       if (response) {
@@ -34,7 +40,10 @@ const PostList = () => {
                 : null}
             </time>
           </UserName>
-          <CustomButton role="delete">Delete</CustomButton>
+          <PostFooter>
+            <CustomButton role="primary">Delete</CustomButton>
+            <CustomButton role="primary">Edit</CustomButton>
+          </PostFooter>
         </PostItem>
       );
     });
