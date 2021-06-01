@@ -5,10 +5,10 @@ import { API, graphqlOperation } from "aws-amplify";
 import { createPost } from "../../graphql/mutations";
 
 const CreatePost = () => {
-  const [ownerId, setOwnerId] = useState<string>(
+  const [postOwnerId, setpostOwnerId] = useState<string>(
     "38f68148-e908-5300-92a8-cc2368c31471"
   );
-  const [ownerUserName, setOwnerUsername] = useState<string>("Paul");
+  const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
   const [postTitle, setPostTitle] = useState<string>("");
   const [postBody, setPostBody] = useState<string>("");
 
@@ -17,22 +17,30 @@ const CreatePost = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log("handleSubmit");
+
     const input = {
-      ownerId,
-      ownerUserName,
+      postOwnerId,
+      postOwnerUsername,
       postTitle,
       postBody,
       createdAt: new Date().toISOString(),
     };
 
-    await API.graphql(graphqlOperation(createPost, { input }));
+    console.log(input);
+
+    try {
+      await API.graphql(graphqlOperation(createPost, { input }));
+    } catch (error) {
+      console.error(error);
+    }
     setPostTitle("");
     setPostBody("");
   };
 
   return (
     <FormContainer>
-      <Form className="add-post" onSubmit={handleSubmit}>
+      <Form className="add-post" onSubmit={(event) => handleSubmit(event)}>
         <input
           name="postTitle"
           type="text"
