@@ -28,15 +28,18 @@ const getButtonStyles = (props: Props) => {
 export const Button = styled.button`
   min-width: 90px;
   margin: 5px;
-  padding: 20px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 700;
   color: white;
   text-shadow: 0px 1px rgba{0,0,0,0.5};
   border: 0;
-  border-radius: 3px;
+  border-radius: 5px;
   cursor: pointer;
+  text-transform: uppercase;
 
   &:hover {
-    background-color: red;
+    background-color: #80ecff;
   }
 
   ${getButtonStyles}

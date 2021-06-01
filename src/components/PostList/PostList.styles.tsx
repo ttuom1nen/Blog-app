@@ -25,4 +25,5 @@ export const UserName = styled.div`
 
 export const PostFooter = styled.div`
   display: flex;
+  flex-flow: row-reverse;
 `;

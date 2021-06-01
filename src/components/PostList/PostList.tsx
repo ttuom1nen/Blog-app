@@ -19,7 +19,6 @@ const PostList = () => {
       // As of 22.05.2021 the graphql response type does not know .data
       // TODO: Fix it
       const response: any = await API.graphql(graphqlOperation(listPosts));
-
       if (response) {
         setPosts(response.data.listPosts.items);
       }
