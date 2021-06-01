@@ -4,7 +4,7 @@ export const FormContainer = styled.div`
   max-width: 500px;
 `;
 
-export const Form = styled.div`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
 
