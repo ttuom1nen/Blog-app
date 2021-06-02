@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { listPosts } from "../../graphql/queries";
 import { API, graphqlOperation } from "aws-amplify";
-import { Post } from "../../API";
+import { Post, OnCreatePostSubscription } from "../../API";
 import {
   PostsContainer,
   PostItem,
@@ -9,9 +9,16 @@ import {
   PostFooter,
 } from "./PostList.styles";
 import CustomButton from "../CustomButton/CustomButton";
+import { onCreatePost } from "../../graphql/subscriptions";
+
+interface PostData {
+  value: {
+    data: OnCreatePostSubscription;
+  };
+}
 
 const PostList = () => {
-  const [posts, setPosts] = useState<Post[]>();
+  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -23,6 +30,23 @@ const PostList = () => {
         setPosts(response.data.listPosts.items);
       }
     })();
+
+    const createPostListener = (
+      API.graphql(graphqlOperation(onCreatePost)) as any
+    ).subscribe({
+      next: (postData: PostData) => {
+        // TODO: Fix any
+        const newPost: any = postData.value.data.onCreatePost;
+        const prevPosts = posts.filter((post) => post.id !== newPost.id);
+        const updatedPosts = [newPost, ...prevPosts];
+
+        setPosts(updatedPosts);
+      },
+    });
+
+    return () => {
+      createPostListener.unsubscribe();
+    };
   }, []);
 
   const renderPosts = () => {
