@@ -9,7 +9,11 @@ export interface Props {
 }
 
 const CustomButton: React.FC<Props> = ({ children, ...props }) => {
-  return <Button {...props}>{children}</Button>;
+  return (
+    <Button {...props} onClick={props.onClick}>
+      {children}
+    </Button>
+  );
 };
 
 export default CustomButton;
