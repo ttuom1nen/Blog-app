@@ -1,6 +1,7 @@
 import React from "react";
 import PostList from "./components/PostList/PostList";
 import CreatePost from "./components/CreatePost/CreatePost";
+import { withAuthenticator } from "aws-amplify-react";
 import "./App.css";
 
 function App() {
@@ -12,4 +13,4 @@ function App() {
   );
 }
 
-export default App;
+export default withAuthenticator(App);

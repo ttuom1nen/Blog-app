@@ -30,7 +30,9 @@ const PostList = () => {
         setPosts(response.data.listPosts.items);
       }
     })();
+  }, []);
 
+  useEffect(() => {
     const createPostListener = (
       API.graphql(graphqlOperation(onCreatePost)) as any
     ).subscribe({
@@ -47,7 +49,7 @@ const PostList = () => {
     return () => {
       createPostListener.unsubscribe();
     };
-  }, []);
+  }, [posts]);
 
   const renderPosts = () => {
     return posts?.map((post: Post) => {
