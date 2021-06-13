@@ -13,15 +13,15 @@ const CreatePost = () => {
   const [postBody, setPostBody] = useState<string>("");
 
   useEffect(() => {
-    try {
-      (async () => {
+    (async () => {
+      try {
         const user = await Auth.currentUserInfo();
         setpostOwnerId(user.attributes.sub);
         setpostOwnerUsername(user.username);
-      })();
-    } catch (error) {
-      console.error(error);
-    }
+      } catch (error) {
+        console.error(error);
+      }
+    })();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
