@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FormContainer, Form } from "./CreatePost.styles";
 import CustomButton from "../CustomButton/CustomButton";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Auth } from "aws-amplify";
 import { createPost } from "../../graphql/mutations";
 
 const CreatePost = () => {
@@ -12,7 +12,17 @@ const CreatePost = () => {
   const [postTitle, setPostTitle] = useState<string>("");
   const [postBody, setPostBody] = useState<string>("");
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    try {
+      (async () => {
+        const user = await Auth.currentUserInfo();
+        setpostOwnerId(user.attributes.sub);
+        setpostOwnerUsername(user.username);
+      })();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
