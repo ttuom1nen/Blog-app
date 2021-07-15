@@ -7,10 +7,22 @@ const defaultButtonStyles = css`
 
 const primaryButtonStyles = css`
   background: #2bdfff;
+  font-size: 14px;
+  font-weight: 700;
+  &:hover {
+    background-color: #80ecff;
+  }
 `;
 
 const secondaryButtonStyles = css`
-  background: #3bddff;
+  background: white;
+  color: #80ecff;
+  font-size: 14px;
+  font-weight: 400;
+  &:hover {
+    color: #80ecff;
+    text-decoration: underline;
+  }
 `;
 
 const getButtonStyles = (props: Props) => {
@@ -28,9 +40,7 @@ const getButtonStyles = (props: Props) => {
 export const Button = styled.button`
   min-width: 90px;
   margin: 5px;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 700;
+  padding: 10px 20px;
   color: white;
   text-shadow: 0px 1px rgba{0,0,0,0.5};
   border: 0;
@@ -38,9 +48,7 @@ export const Button = styled.button`
   cursor: pointer;
   text-transform: uppercase;
 
-  &:hover {
-    background-color: #80ecff;
-  }
+
 
   ${getButtonStyles}
 `;
