@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const BlogPost = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 20px;
   background-color: white;
   border: 1px solid silver;
@@ -19,5 +19,5 @@ export const UserName = styled.div`
 
 export const PostFooter = styled.div`
   display: flex;
-  flex-flow: row-reverse;
+  justify-content: flex-end;
 `;
