@@ -4,10 +4,16 @@ import CustomButton from "../CustomButton/CustomButton";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { createPost } from "../../graphql/mutations";
 
+interface SubmitPost {
+  postOwnerId: string;
+  postOwnerUsername: string;
+  postTitle: string;
+  postBody: string;
+  createdAt: string;
+}
+
 const CreatePost = () => {
-  const [postOwnerId, setpostOwnerId] = useState<string>(
-    "38f68148-e908-5300-92a8-cc2368c31471"
-  );
+  const [postOwnerId, setpostOwnerId] = useState<string>("");
   const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
   const [postTitle, setPostTitle] = useState<string>("");
   const [postBody, setPostBody] = useState<string>("");
@@ -29,7 +35,7 @@ const CreatePost = () => {
 
     console.log("handleSubmit");
 
-    const input = {
+    const input: SubmitPost = {
       postOwnerId,
       postOwnerUsername,
       postTitle,
