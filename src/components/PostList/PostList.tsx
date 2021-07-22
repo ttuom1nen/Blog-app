@@ -7,9 +7,16 @@ import {
   Post,
   OnCreatePostSubscription,
   OnDeletePostSubscription,
+  OnUpdatePostSubscription,
 } from "../../API";
 import { PostsContainer } from "./PostList.styles";
-import { onCreatePost, onDeletePost } from "../../graphql/subscriptions";
+import {
+  onCreatePost,
+  onDeletePost,
+  onUpdatePost,
+} from "../../graphql/subscriptions";
+import { Auth } from "aws-amplify";
+import { updatePost } from "../../graphql/mutations";
 
 interface PostData {
   value: {
@@ -23,12 +30,32 @@ interface DeletedPostData {
   };
 }
 
+interface UpdatePostData {
+  value: {
+    data: OnUpdatePostSubscription;
+  };
+}
+
 export interface EditablePost extends Post {
   editmode?: boolean;
 }
 
 const PostList = () => {
   const [posts, setPosts] = useState<EditablePost[]>([]);
+  const [postOwnerId, setpostOwnerId] = useState<string>("");
+  const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await Auth.currentUserInfo();
+        setpostOwnerId(user.attributes.sub);
+        setpostOwnerUsername(user.username);
+      } catch (error) {
+        console.error(error);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -53,7 +80,6 @@ const PostList = () => {
       next: (postData: PostData) => {
         // TODO: Fix any
         const newPost: any = postData.value.data.onCreatePost;
-        console.log(newPost);
         const prevPosts = posts.filter((post) => post.id !== newPost.id);
         const updatedPosts = [newPost, ...prevPosts];
 
@@ -68,15 +94,29 @@ const PostList = () => {
       next: (postData: DeletedPostData) => {
         // TODO: Fix any
         const deletedPost: any = postData.value.data.onDeletePost;
-        console.log(deletedPost);
         const updatedPosts = posts.filter((post) => post.id !== deletedPost.id);
         setPosts(updatedPosts);
       },
     });
 
+    const updatePostListener = (
+      API.graphql(graphqlOperation(onUpdatePost)) as any
+    ).subscribe({
+      next: (postData: UpdatePostData) => {
+        const updatedPost = postData.value.data.onUpdatePost;
+        const updatedPosts: any = posts.map((post) =>
+          post.id === updatedPost!.id ? updatedPost : post
+        );
+
+        setPosts(updatedPosts);
+      },
+      error: (error: string) => console.warn(error),
+    });
+
     return () => {
       createPostListener.unsubscribe();
       deletePostListener.unsubscribe();
+      updatePostListener.unsubscribe();
     };
   }, [posts]);
 
@@ -92,12 +132,21 @@ const PostList = () => {
     setPosts(newPosts);
   };
 
-  const submitEditedPost = (
+  const submitEditedPost = async (
     postId: string,
     postTitle: string,
     postBody: string
   ) => {
-    console.log("Submit");
+    const input = {
+      id: postId,
+      postOwnerId,
+      postOwnerUsername,
+      postTitle,
+      postBody,
+    };
+
+    editPostById(postId, false);
+    await API.graphql(graphqlOperation(updatePost, { input }));
   };
 
   const renderPosts = () => {

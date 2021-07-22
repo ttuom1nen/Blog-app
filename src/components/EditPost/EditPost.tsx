@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CustomButton from "../CustomButton/CustomButton";
-import { BlogPost, UserName, PostFooter } from "../Post/PostItem.styles";
+import { BlogPost, PostFooter } from "../Post/PostItem.styles";
 import { FormContainer, Form } from "../CreatePost/CreatePost.styles";
 import { EditablePost } from "../PostList/PostList";
-import { Auth } from "aws-amplify";
 
 interface Props {
   post: EditablePost;
@@ -14,20 +13,6 @@ interface Props {
 const EditPost: React.FC<Props> = ({ post, editPost, submitPost }) => {
   const [postTitle, setPostTitle] = useState(post.postTitle || "");
   const [postBody, setPostBody] = useState(post.postBody || "");
-  const [postOwnerId, setpostOwnerId] = useState<string>("");
-  const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await Auth.currentUserInfo();
-        setpostOwnerId(user.attributes.sub);
-        setpostOwnerUsername(user.username);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
 
   const handleSubmitEditForm = (
     event: React.SyntheticEvent<HTMLFormElement>
@@ -59,6 +44,7 @@ const EditPost: React.FC<Props> = ({ post, editPost, submitPost }) => {
             <CustomButton
               role="secondary"
               onClick={() => editPost(post.id as string, false)}
+              type="button"
             >
               Cancel
             </CustomButton>

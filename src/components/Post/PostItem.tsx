@@ -22,7 +22,6 @@ const PostItem: React.FC<Props> = ({ post, editPost }) => {
   };
 
   const handlePostEdit = (id: string) => {
-    console.log("Edit clicked!");
     editPost(id);
   };
 
