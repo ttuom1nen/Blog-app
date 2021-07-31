@@ -30,10 +30,8 @@ const CreatePost = () => {
     })();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    console.log("handleSubmit");
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     const input: SubmitPost = {
       postOwnerId,
@@ -62,7 +60,7 @@ const CreatePost = () => {
           type="text"
           placeholder="Title"
           value={postTitle}
-          onChange={(e) => setPostTitle(e.target.value)}
+          onChange={(event) => setPostTitle(event.target.value)}
           required
         ></input>
 
@@ -72,7 +70,7 @@ const CreatePost = () => {
           rows={3}
           cols={40}
           value={postBody}
-          onChange={(e) => setPostBody(e.target.value)}
+          onChange={(event) => setPostBody(event.target.value)}
           required
         ></textarea>
 

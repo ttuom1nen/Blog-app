@@ -16,7 +16,7 @@ import {
   onUpdatePost,
 } from "../../graphql/subscriptions";
 import { Auth } from "aws-amplify";
-import { updatePost } from "../../graphql/mutations";
+import { updatePost, createComment } from "../../graphql/mutations";
 
 interface PostData {
   value: {
@@ -103,8 +103,9 @@ const PostList = () => {
       API.graphql(graphqlOperation(onUpdatePost)) as any
     ).subscribe({
       next: (postData: UpdatePostData) => {
-        const updatedPost = postData.value.data.onUpdatePost;
-        const updatedPosts: any = posts.map((post) =>
+        // TODO: Fix any
+        const updatedPost: any = postData.value.data.onUpdatePost;
+        const updatedPosts = posts.map((post) =>
           post.id === updatedPost!.id ? updatedPost : post
         );
 
@@ -149,10 +150,27 @@ const PostList = () => {
     await API.graphql(graphqlOperation(updatePost, { input }));
   };
 
+  const submitComment = async (postId: string, comment: string) => {
+    const input = {
+      commentPostId: postId,
+      commentOwnerId: postOwnerId,
+      commentOwnerUsername: postOwnerUsername,
+      content: comment,
+      createdAt: new Date().toISOString(),
+    };
+
+    await API.graphql(graphqlOperation(createComment, { input }));
+  };
+
   const renderPosts = () => {
     return posts?.map((post: EditablePost) => {
       return !post.editmode ? (
-        <PostItem key={post.id} post={post} editPost={editPostById}></PostItem>
+        <PostItem
+          key={post.id}
+          post={post}
+          editPost={editPostById}
+          submitComment={submitComment}
+        ></PostItem>
       ) : (
         <EditPost
           key={post.id}

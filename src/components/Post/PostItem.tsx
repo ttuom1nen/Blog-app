@@ -5,13 +5,15 @@ import { EditablePost } from "../PostList/PostList";
 import { BlogPost, UserName, PostFooter } from "./PostItem.styles";
 import { API, graphqlOperation } from "aws-amplify";
 import { deletePost } from "../../graphql/mutations";
+import CommentForm from "../CommentForm/CommentForm";
 
 interface Props {
   post: EditablePost;
   editPost: (id: string, mode?: boolean | undefined) => void;
+  submitComment: (id: string, comment: string) => void;
 }
 
-const PostItem: React.FC<Props> = ({ post, editPost }) => {
+const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
   const handlePostDelete = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -25,17 +27,14 @@ const PostItem: React.FC<Props> = ({ post, editPost }) => {
     editPost(id);
   };
 
+  const handleSubmitComment = (comment: string) => {
+    if (!post.id) return;
+    submitComment(post.id, comment);
+  };
+
   if (!post.id) {
     return null;
   }
-
-  // if (post.editmode) {
-  //   return (
-  //     <BlogPost>
-  //       <EditPost></EditPost>
-  //     </BlogPost>
-  //   );
-  // }
 
   return (
     <BlogPost>
@@ -49,6 +48,7 @@ const PostItem: React.FC<Props> = ({ post, editPost }) => {
             : null}
         </time>
       </UserName>
+      <CommentForm submitComment={handleSubmitComment}></CommentForm>
       <PostFooter>
         <CustomButton
           role="secondary"
