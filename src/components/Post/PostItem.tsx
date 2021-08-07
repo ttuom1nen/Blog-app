@@ -2,7 +2,7 @@ import React from "react";
 import CustomButton from "../CustomButton/CustomButton";
 // import { Post } from "../../API";
 import { EditablePost } from "../PostList/PostList";
-import { BlogPost, UserName, PostFooter } from "./PostItem.styles";
+import { BlogPost, UserName, PostFooter, CommentList } from "./PostItem.styles";
 import { API, graphqlOperation } from "aws-amplify";
 import { deletePost } from "../../graphql/mutations";
 import CommentForm from "../CommentForm/CommentForm";
@@ -70,8 +70,10 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
           Delete
         </CustomButton>
       </PostFooter>
-      <CommentForm submitComment={handleSubmitComment}></CommentForm>
-      {renderComments()}
+      <CommentList>
+        <CommentForm submitComment={handleSubmitComment}></CommentForm>
+        {renderComments()}
+      </CommentList>
     </BlogPost>
   );
 };

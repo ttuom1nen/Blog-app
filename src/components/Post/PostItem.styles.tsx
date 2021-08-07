@@ -21,3 +21,7 @@ export const PostFooter = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
+export const CommentList = styled.div`
+  padding: 20px;
+`;

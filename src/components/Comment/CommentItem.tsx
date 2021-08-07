@@ -1,4 +1,10 @@
 import React from "react";
+import {
+  CommentContainer,
+  CommentDate,
+  CommentBody,
+} from "./CommentItem.styles";
+
 import { Comment } from "../../API";
 
 interface Props {
@@ -7,10 +13,10 @@ interface Props {
 
 const CommentItem: React.FC<Props> = ({ commentData }) => {
   return (
-    <div>
-      <time>{new Date().toDateString()}</time>
-      {commentData.content}
-    </div>
+    <CommentContainer>
+      <CommentBody>{commentData.content}</CommentBody>
+      <CommentDate>{new Date().toLocaleDateString()}</CommentDate>
+    </CommentContainer>
   );
 };
 
