@@ -11,8 +11,8 @@ const CommentForm: React.FC<Props> = ({ submitComment }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setContent("");
     submitComment(content);
+    setContent("");
   };
 
   return (
