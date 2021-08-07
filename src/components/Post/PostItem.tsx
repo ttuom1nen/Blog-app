@@ -6,6 +6,7 @@ import { BlogPost, UserName, PostFooter } from "./PostItem.styles";
 import { API, graphqlOperation } from "aws-amplify";
 import { deletePost } from "../../graphql/mutations";
 import CommentForm from "../CommentForm/CommentForm";
+import CommentItem from "../Comment/CommentItem";
 
 interface Props {
   post: EditablePost;
@@ -36,6 +37,16 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
     return null;
   }
 
+  const renderComments = () => {
+    if (!post.comments || !post.comments.items) {
+      return null;
+    }
+
+    return post.comments.items.map((comment) => (
+      <CommentItem key={comment!.id} commentData={comment!}></CommentItem>
+    ));
+  };
+
   return (
     <BlogPost>
       <h3>{post.postTitle}</h3>
@@ -48,7 +59,6 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
             : null}
         </time>
       </UserName>
-      <CommentForm submitComment={handleSubmitComment}></CommentForm>
       <PostFooter>
         <CustomButton
           role="secondary"
@@ -60,6 +70,8 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
           Delete
         </CustomButton>
       </PostFooter>
+      <CommentForm submitComment={handleSubmitComment}></CommentForm>
+      {renderComments()}
     </BlogPost>
   );
 };
