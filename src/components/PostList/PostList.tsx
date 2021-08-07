@@ -8,12 +8,14 @@ import {
   OnCreatePostSubscription,
   OnDeletePostSubscription,
   OnUpdatePostSubscription,
+  OnCreateCommentSubscription,
 } from "../../API";
 import { PostsContainer } from "./PostList.styles";
 import {
   onCreatePost,
   onDeletePost,
   onUpdatePost,
+  onCreateComment,
 } from "../../graphql/subscriptions";
 import { Auth } from "aws-amplify";
 import { updatePost, createComment } from "../../graphql/mutations";
@@ -33,6 +35,12 @@ interface DeletedPostData {
 interface UpdatePostData {
   value: {
     data: OnUpdatePostSubscription;
+  };
+}
+
+interface CreateCommentData {
+  value: {
+    data: OnCreateCommentSubscription;
   };
 }
 
@@ -114,10 +122,34 @@ const PostList = () => {
       error: (error: string) => console.warn(error),
     });
 
+    const createPostCommentListener = (
+      API.graphql(graphqlOperation(onCreateComment)) as any
+    ).subscribe({
+      next: (commentData: CreateCommentData) => {
+        const createdComment = commentData.value.data.onCreateComment;
+
+        if (!createdComment || !createdComment.post) return;
+
+        let newPosts = [...posts];
+
+        for (let post of newPosts) {
+          if (!post.comments || !post.comments.items) break;
+
+          if (post.id === createdComment.post!.id) {
+            (post.comments.items as any).push(createdComment);
+          }
+        }
+
+        setPosts(newPosts);
+      },
+      error: (error: string) => console.warn(error),
+    });
+
     return () => {
       createPostListener.unsubscribe();
       deletePostListener.unsubscribe();
       updatePostListener.unsubscribe();
+      createPostCommentListener.unsubscribe();
     };
   }, [posts]);
 
