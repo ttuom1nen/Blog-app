@@ -1,10 +1,14 @@
 import React from "react";
 import CustomButton from "../CustomButton/CustomButton";
-// import { Post } from "../../API";
+
 import { EditablePost } from "../PostList/PostList";
-import { BlogPost, UserName, PostFooter, CommentList } from "./PostItem.styles";
+
 import { API, graphqlOperation } from "aws-amplify";
 import { deletePost } from "../../graphql/mutations";
+
+import { FaThumbsUp } from "react-icons/fa";
+
+import { BlogPost, UserName, PostFooter, CommentList } from "./PostItem.styles";
 import CommentForm from "../CommentForm/CommentForm";
 import CommentItem from "../Comment/CommentItem";
 
@@ -12,9 +16,15 @@ interface Props {
   post: EditablePost;
   editPost: (id: string, mode?: boolean | undefined) => void;
   submitComment: (id: string, comment: string) => void;
+  submitLike: (id: string) => void;
 }
 
-const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
+const PostItem: React.FC<Props> = ({
+  post,
+  editPost,
+  submitComment,
+  submitLike,
+}) => {
   const handlePostDelete = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -31,6 +41,10 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
   const handleSubmitComment = (comment: string) => {
     if (!post.id) return;
     submitComment(post.id, comment);
+  };
+
+  const handleLike = (postId: string) => {
+    submitLike(postId);
   };
 
   if (!post.id) {
@@ -60,6 +74,9 @@ const PostItem: React.FC<Props> = ({ post, editPost, submitComment }) => {
         </time>
       </UserName>
       <PostFooter>
+        <p onClick={() => handleLike(post.id as string)}>
+          <FaThumbsUp />
+        </p>
         <CustomButton
           role="secondary"
           onClick={() => handlePostEdit(post.id as string)}

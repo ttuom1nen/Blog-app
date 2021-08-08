@@ -9,6 +9,7 @@ import {
   OnDeletePostSubscription,
   OnUpdatePostSubscription,
   OnCreateCommentSubscription,
+  OnCreateLikeSubscription,
 } from "../../API";
 import { PostsContainer } from "./PostList.styles";
 import {
@@ -16,9 +17,10 @@ import {
   onDeletePost,
   onUpdatePost,
   onCreateComment,
+  onCreateLike,
 } from "../../graphql/subscriptions";
 import { Auth } from "aws-amplify";
-import { updatePost, createComment } from "../../graphql/mutations";
+import { updatePost, createComment, createLike } from "../../graphql/mutations";
 
 interface PostData {
   value: {
@@ -41,6 +43,12 @@ interface UpdatePostData {
 interface CreateCommentData {
   value: {
     data: OnCreateCommentSubscription;
+  };
+}
+
+interface CreateLikeData {
+  value: {
+    data: OnCreateLikeSubscription;
   };
 }
 
@@ -145,13 +153,56 @@ const PostList = () => {
       error: (error: string) => console.warn(error),
     });
 
+    const createPostLikeListener = (
+      API.graphql(graphqlOperation(onCreateLike)) as any
+    ).subscribe({
+      next: (postData: CreateLikeData) => {
+        const createdLike = postData.value.data.onCreateLike;
+
+        if (!createdLike || !createdLike.post) return;
+
+        let newPosts = [...posts];
+
+        for (let post of newPosts) {
+          if (!post.likes || !post.likes.items) break;
+
+          if (post.id === createdLike.post!.id) {
+            (post.likes.items as any).push(createdLike);
+          }
+        }
+
+        setPosts(newPosts);
+      },
+      error: (error: string) => console.warn(error),
+    });
+
     return () => {
       createPostListener.unsubscribe();
       deletePostListener.unsubscribe();
       updatePostListener.unsubscribe();
       createPostCommentListener.unsubscribe();
+      createPostLikeListener.unsubscribe();
     };
   }, [posts]);
+
+  const submitLike = async (postId: string) => {
+    const input = {
+      numberLikes: 1,
+      likeOwnerId: postOwnerId,
+      likeOwnerUsername: postOwnerUsername,
+      likePostId: postId,
+    };
+
+    try {
+      const result: any = await API.graphql(
+        graphqlOperation(createLike, { input })
+      );
+
+      console.log(result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const editPostById = (id: string, mode?: boolean | undefined) => {
     const newPosts: EditablePost[] = posts.map((post: EditablePost) => {
@@ -202,6 +253,7 @@ const PostList = () => {
           post={post}
           editPost={editPostById}
           submitComment={submitComment}
+          submitLike={submitLike}
         ></PostItem>
       ) : (
         <EditPost
