@@ -14,6 +14,7 @@ import CommentItem from "../Comment/CommentItem";
 
 interface Props {
   post: EditablePost;
+  currentUser: string;
   editPost: (id: string, mode?: boolean | undefined) => void;
   submitComment: (id: string, comment: string) => void;
   submitLike: (id: string) => void;
@@ -21,6 +22,7 @@ interface Props {
 
 const PostItem: React.FC<Props> = ({
   post,
+  currentUser,
   editPost,
   submitComment,
   submitLike,
@@ -73,20 +75,28 @@ const PostItem: React.FC<Props> = ({
             : null}
         </time>
       </UserName>
+
       <PostFooter>
         <p onClick={() => handleLike(post.id as string)}>
-          <FaThumbsUp />
+          {currentUser !== post.postOwnerId ? <FaThumbsUp /> : "Likes: "}
+          {post.likes && post.likes.items ? post.likes.items.length : null}
         </p>
-        <CustomButton
-          role="secondary"
-          onClick={() => handlePostEdit(post.id as string)}
-        >
-          Edit
-        </CustomButton>
-        <CustomButton role="secondary" onClick={handlePostDelete}>
-          Delete
-        </CustomButton>
+
+        {currentUser === post.postOwnerId && (
+          <>
+            <CustomButton
+              role="secondary"
+              onClick={() => handlePostEdit(post.id as string)}
+            >
+              Edit
+            </CustomButton>
+            <CustomButton role="secondary" onClick={handlePostDelete}>
+              Delete
+            </CustomButton>
+          </>
+        )}
       </PostFooter>
+
       <CommentList>
         <CommentForm submitComment={handleSubmitComment}></CommentForm>
         {renderComments()}

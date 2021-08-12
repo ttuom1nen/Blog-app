@@ -252,6 +252,7 @@ const PostList = () => {
           key={post.id}
           post={post}
           editPost={editPostById}
+          currentUser={postOwnerId}
           submitComment={submitComment}
           submitLike={submitLike}
         ></PostItem>
