@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import CustomButton from "../CustomButton/CustomButton";
 
 import { EditablePost } from "../PostList/PostList";
@@ -49,6 +49,8 @@ const PostItem: React.FC<Props> = ({
     submitLike(postId);
   };
 
+  const [showComments, setshowComments] = useState<boolean>(false);
+
   if (!post.id) {
     return null;
   }
@@ -77,6 +79,13 @@ const PostItem: React.FC<Props> = ({
       </UserName>
 
       <PostFooter>
+        <CustomButton
+          role="secondary"
+          onClick={() => setshowComments(!showComments)}
+        >
+          {showComments ? "Hide" : "Show"} comments
+        </CustomButton>
+
         <p onClick={() => handleLike(post.id as string)}>
           {currentUser !== post.postOwnerId ? <FaThumbsUp /> : "Likes: "}
           {post.likes && post.likes.items ? post.likes.items.length : null}
@@ -96,11 +105,12 @@ const PostItem: React.FC<Props> = ({
           </>
         )}
       </PostFooter>
-
-      <CommentList>
-        <CommentForm submitComment={handleSubmitComment}></CommentForm>
-        {renderComments()}
-      </CommentList>
+      {showComments && (
+        <CommentList>
+          <CommentForm submitComment={handleSubmitComment}></CommentForm>
+          {renderComments()}
+        </CommentList>
+      )}
     </BlogPost>
   );
 };
