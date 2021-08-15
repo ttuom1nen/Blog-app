@@ -50,6 +50,8 @@ const PostItem: React.FC<Props> = ({
   };
 
   const [showComments, setshowComments] = useState<boolean>(false);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [postLikedBy, setPostLikedBy] = useState<string[]>([""]);
 
   if (!post.id) {
     return null;
@@ -63,6 +65,20 @@ const PostItem: React.FC<Props> = ({
     return post.comments.items.map((comment) => (
       <CommentItem key={comment!.id} commentData={comment!}></CommentItem>
     ));
+  };
+
+  const handleMouseHover = (postId: string) => {
+    setIsHovering(!isHovering);
+
+    if (!post.likes || !post.likes.items) return;
+
+    setPostLikedBy(
+      post.likes.items.map((like) => {
+        return like?.likeOwnerUsername || "";
+      })
+    );
+
+    console.log(postLikedBy);
   };
 
   return (
@@ -86,7 +102,10 @@ const PostItem: React.FC<Props> = ({
           {showComments ? "Hide" : "Show"} comments
         </CustomButton>
 
-        <p onClick={() => handleLike(post.id as string)}>
+        <p
+          onClick={() => handleLike(post.id as string)}
+          onMouseEnter={() => handleMouseHover(post.id as string)}
+        >
           {currentUser !== post.postOwnerId ? <FaThumbsUp /> : "Likes: "}
           {post.likes && post.likes.items ? post.likes.items.length : null}
         </p>
