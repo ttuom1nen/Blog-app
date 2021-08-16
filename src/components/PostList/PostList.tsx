@@ -58,15 +58,15 @@ export interface EditablePost extends Post {
 
 const PostList = () => {
   const [posts, setPosts] = useState<EditablePost[]>([]);
-  const [postOwnerId, setpostOwnerId] = useState<string>("");
-  const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
+  const [userId, setUserId] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
 
   useEffect(() => {
     (async () => {
       try {
         const user = await Auth.currentUserInfo();
-        setpostOwnerId(user.attributes.sub);
-        setpostOwnerUsername(user.username);
+        setUserId(user.attributes.sub);
+        setUserName(user.username);
       } catch (error) {
         console.error(error);
       }
@@ -188,8 +188,8 @@ const PostList = () => {
   const submitLike = async (postId: string) => {
     const input = {
       numberLikes: 1,
-      likeOwnerId: postOwnerId,
-      likeOwnerUsername: postOwnerUsername,
+      likeOwnerId: userId,
+      likeOwnerUsername: userName,
       likePostId: postId,
     };
 
@@ -223,8 +223,8 @@ const PostList = () => {
   ) => {
     const input = {
       id: postId,
-      postOwnerId,
-      postOwnerUsername,
+      userId,
+      userName,
       postTitle,
       postBody,
     };
@@ -236,8 +236,8 @@ const PostList = () => {
   const submitComment = async (postId: string, comment: string) => {
     const input = {
       commentPostId: postId,
-      commentOwnerId: postOwnerId,
-      commentOwnerUsername: postOwnerUsername,
+      commentOwnerId: userId,
+      commentOwnerUsername: userName,
       content: comment,
       createdAt: new Date().toISOString(),
     };
@@ -252,7 +252,7 @@ const PostList = () => {
           key={post.id}
           post={post}
           editPost={editPostById}
-          currentUser={postOwnerId}
+          currentUser={userId}
           submitComment={submitComment}
           submitLike={submitLike}
         ></PostItem>
