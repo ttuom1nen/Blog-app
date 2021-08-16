@@ -103,10 +103,19 @@ const PostItem: React.FC<Props> = ({
         </CustomButton>
 
         <p
-          onClick={() => handleLike(post.id as string)}
-          onMouseEnter={() => handleMouseHover(post.id as string)}
+          onClick={() =>
+            currentUser !== post.postOwnerId && handleLike(post.id as string)
+          }
+          onMouseEnter={() =>
+            post!.likes!.items?.length && handleMouseHover(post.id as string)
+          }
+          onMouseLeave={() => setIsHovering(false)}
+          style={{
+            color: post!.likes!.items!.length > 0 ? "blue" : "gray",
+            cursor: currentUser !== post.postOwnerId ? "pointer" : "default",
+          }}
         >
-          {currentUser !== post.postOwnerId ? <FaThumbsUp /> : "Likes: "}
+          <FaThumbsUp />
           {post.likes && post.likes.items ? post.likes.items.length : null}
         </p>
 
