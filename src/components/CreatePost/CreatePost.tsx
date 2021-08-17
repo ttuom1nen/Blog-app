@@ -41,8 +41,6 @@ const CreatePost = () => {
       createdAt: new Date().toISOString(),
     };
 
-    console.log(input);
-
     try {
       await API.graphql(graphqlOperation(createPost, { input }));
     } catch (error) {
