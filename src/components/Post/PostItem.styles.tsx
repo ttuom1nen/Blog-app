@@ -25,3 +25,17 @@ export const PostFooter = styled.div`
 export const CommentList = styled.div`
   padding: 20px;
 `;
+
+export const LikeContainer = styled.div`
+  position: relative;
+`;
+
+export const ToolTip = styled.div`
+  position: absolute;
+  background: white;
+  border: 1px solid silver;
+  padding: 10px;
+  box-shadow: 0 2px 5px 1px rgb(0 0 0 / 10%);
+  bottom: 54px;
+  transform: translateX(-50%);
+`;

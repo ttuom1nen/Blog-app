@@ -8,7 +8,14 @@ import { deletePost } from "../../graphql/mutations";
 
 import { FaThumbsUp } from "react-icons/fa";
 
-import { BlogPost, UserName, PostFooter, CommentList } from "./PostItem.styles";
+import {
+  BlogPost,
+  UserName,
+  PostFooter,
+  CommentList,
+  LikeContainer,
+  ToolTip,
+} from "./PostItem.styles";
 import CommentForm from "../CommentForm/CommentForm";
 import CommentItem from "../Comment/CommentItem";
 
@@ -51,7 +58,6 @@ const PostItem: React.FC<Props> = ({
 
   const [showComments, setshowComments] = useState<boolean>(false);
   const [isHovering, setIsHovering] = useState<boolean>(false);
-  const [postLikedBy, setPostLikedBy] = useState<string[]>([""]);
 
   if (!post.id) {
     return null;
@@ -69,16 +75,6 @@ const PostItem: React.FC<Props> = ({
 
   const handleMouseHover = (postId: string) => {
     setIsHovering(!isHovering);
-
-    if (!post.likes || !post.likes.items) return;
-
-    setPostLikedBy(
-      post.likes.items.map((like) => {
-        return like?.likeOwnerUsername || "";
-      })
-    );
-
-    console.log(postLikedBy);
   };
 
   return (
@@ -102,7 +98,7 @@ const PostItem: React.FC<Props> = ({
           {showComments ? "Hide" : "Show"} comments
         </CustomButton>
 
-        <p
+        <LikeContainer
           onClick={() =>
             currentUser !== post.postOwnerId && handleLike(post.id as string)
           }
@@ -115,9 +111,17 @@ const PostItem: React.FC<Props> = ({
             cursor: currentUser !== post.postOwnerId ? "pointer" : "default",
           }}
         >
+          {post?.likes?.items?.length && isHovering ? (
+            <ToolTip>
+              {post.likes.items.map((like) => {
+                return <p key={like?.id}>{like?.likeOwnerUsername}</p> || "";
+              })}
+            </ToolTip>
+          ) : null}
+
           <FaThumbsUp />
           {post.likes && post.likes.items ? post.likes.items.length : null}
-        </p>
+        </LikeContainer>
 
         {currentUser === post.postOwnerId && (
           <>
