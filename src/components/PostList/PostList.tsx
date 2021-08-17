@@ -194,9 +194,7 @@ const PostList = () => {
     };
 
     try {
-      const result: any = await API.graphql(
-        graphqlOperation(createLike, { input })
-      );
+      await API.graphql(graphqlOperation(createLike, { input }));
     } catch (error) {
       console.error(error);
     }
