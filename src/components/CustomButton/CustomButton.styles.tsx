@@ -16,8 +16,8 @@ const primaryButtonStyles = css`
 
 const secondaryButtonStyles = css`
   background: white;
-  color: #80ecff;
-  font-size: 14px;
+  color: #80b5ff;
+  font-size: 12px;
   font-weight: 400;
   &:hover {
     color: #80ecff;
@@ -47,8 +47,5 @@ export const Button = styled.button`
   border-radius: 5px;
   cursor: pointer;
   text-transform: uppercase;
-
-
-
   ${getButtonStyles}
 `;
