@@ -91,13 +91,6 @@ const PostItem: React.FC<Props> = ({
       </UserName>
 
       <PostFooter>
-        <CustomButton
-          role="secondary"
-          onClick={() => setshowComments(!showComments)}
-        >
-          {showComments ? "Hide" : "Show"} comments
-        </CustomButton>
-
         <LikeContainer
           onClick={() =>
             currentUser !== post.postOwnerId && handleLike(post.id as string)
@@ -123,8 +116,15 @@ const PostItem: React.FC<Props> = ({
           {post.likes && post.likes.items ? post.likes.items.length : null}
         </LikeContainer>
 
+        <CustomButton
+          role="secondary"
+          onClick={() => setshowComments(!showComments)}
+        >
+          {showComments ? "Hide" : "Show"} comments
+        </CustomButton>
+
         {currentUser === post.postOwnerId && (
-          <>
+          <div>
             <CustomButton
               role="secondary"
               onClick={() => handlePostEdit(post.id as string)}
@@ -134,7 +134,7 @@ const PostItem: React.FC<Props> = ({
             <CustomButton role="secondary" onClick={handlePostDelete}>
               Delete
             </CustomButton>
-          </>
+          </div>
         )}
       </PostFooter>
       {showComments && (

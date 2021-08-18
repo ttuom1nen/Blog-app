@@ -19,7 +19,8 @@ export const UserName = styled.div`
 
 export const PostFooter = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export const CommentList = styled.div`
