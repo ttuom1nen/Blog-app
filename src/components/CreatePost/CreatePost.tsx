@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FormContainer, Form } from "./CreatePost.styles";
 import CustomButton from "../CustomButton/CustomButton";
-import { API, graphqlOperation, Auth } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { createPost } from "../../graphql/mutations";
 
 interface SubmitPost {
@@ -12,30 +12,21 @@ interface SubmitPost {
   createdAt: string;
 }
 
-const CreatePost = () => {
-  const [postOwnerId, setpostOwnerId] = useState<string>("");
-  const [postOwnerUsername, setpostOwnerUsername] = useState<string>("Paul");
+interface Props {
+  userId: string;
+  userName: string;
+}
+
+const CreatePost: React.FC<Props> = ({ userId, userName }) => {
   const [postTitle, setPostTitle] = useState<string>("");
   const [postBody, setPostBody] = useState<string>("");
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await Auth.currentUserInfo();
-        setpostOwnerId(user.attributes.sub);
-        setpostOwnerUsername(user.username);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const input: SubmitPost = {
-      postOwnerId,
-      postOwnerUsername,
+      postOwnerId: userId,
+      postOwnerUsername: userName,
       postTitle,
       postBody,
       createdAt: new Date().toISOString(),

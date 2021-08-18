@@ -19,7 +19,6 @@ import {
   onCreateComment,
   onCreateLike,
 } from "../../graphql/subscriptions";
-import { Auth } from "aws-amplify";
 import { updatePost, createComment, createLike } from "../../graphql/mutations";
 
 interface PostData {
@@ -56,22 +55,13 @@ export interface EditablePost extends Post {
   editmode?: boolean;
 }
 
-const PostList = () => {
-  const [posts, setPosts] = useState<EditablePost[]>([]);
-  const [userId, setUserId] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
+interface Props {
+  userId: string;
+  userName: string;
+}
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const user = await Auth.currentUserInfo();
-        setUserId(user.attributes.sub);
-        setUserName(user.username);
-      } catch (error) {
-        console.error(error);
-      }
-    })();
-  }, []);
+const PostList: React.FC<Props> = ({ userId, userName }) => {
+  const [posts, setPosts] = useState<EditablePost[]>([]);
 
   useEffect(() => {
     (async () => {
