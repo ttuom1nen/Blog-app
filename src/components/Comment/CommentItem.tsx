@@ -15,7 +15,9 @@ const CommentItem: React.FC<Props> = ({ commentData }) => {
   return (
     <CommentContainer>
       <CommentBody>{commentData.content}</CommentBody>
-      <CommentDate>{new Date().toLocaleDateString()}</CommentDate>
+      <CommentDate>
+        {new Date("" + commentData.createdAt).toLocaleDateString()}
+      </CommentDate>
     </CommentContainer>
   );
 };
